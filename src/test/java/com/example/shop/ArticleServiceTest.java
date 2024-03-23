@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/*
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -68,4 +68,3 @@ public class ArticleServiceTest {
         articleService.deleteArticle(cd.getArticleId());
     }
 }
-*/
