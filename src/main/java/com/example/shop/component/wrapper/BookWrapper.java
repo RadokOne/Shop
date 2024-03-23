@@ -2,13 +2,16 @@ package com.example.shop.component.wrapper;
 
 public class BookWrapper extends ArticleWrapper {
 
+    private String type;
     private String author;
     private BookCategoryWrapper bookCategory;
 
-    public BookWrapper(int articleId, String name, String manufactor, Float price, String author, BookCategoryWrapper bookCategory) {
-        super(articleId, name, manufactor, price);
+    public BookWrapper(int articleId, String name, String manufactor, Float price, String author, BookCategoryWrapper bookCategory, String type) {
+        super(articleId, name, manufactor, price, "book");
         this.author = author;
         this.bookCategory = bookCategory;
+
+        this.type = type;
     }
 
 

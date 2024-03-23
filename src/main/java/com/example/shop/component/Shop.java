@@ -1,5 +1,6 @@
 package com.example.shop.component;
 
+import com.example.shop.component.behavior.ShopService;
 import com.example.shop.component.wrapper.ArticleWrapper;
 import com.example.shop.connectors.ArticleConnector;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,14 @@ import java.util.List;
 
 
 public class Shop {
-	private Catalog catalog;
+	private ShopService shopService;
 	private List<Integer> customerId;
 
 
 	public Shop() {
 		//customers = new HashMap<Integer, Customer>();
-		catalog = new Catalog();
+		shopService = new ShopService();
+
 	}
 
 //	public Integer createCustomerWithCart() {
@@ -30,14 +32,8 @@ public class Shop {
 
 	public ArticleWrapper getArticle(int articleId) {
 		// Delegation
-		return catalog.getArticle(articleId);
+		return shopService.getArticle(articleId);
 	}
-
-	public Catalog getCatalog() {
-		return catalog;
-	}
-
-
 
 
 

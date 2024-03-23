@@ -1,13 +1,35 @@
 package com.example.shop.component.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = BookWrapper.class, name = "book"),
+        @JsonSubTypes.Type(value = CDWrapper.class, name = "cd")
+})
 public abstract class ArticleWrapper {
 
     private int articleId;
     private String name;
     private String manufactor;
     private Float price;
+    private String type;
 
-    public ArticleWrapper(int articleId, String name, String manufactor, Float price) {
+    public ArticleWrapper(int articleId, String name, String manufactor, Float price, String type) {
+        this.articleId = articleId;
+        this.name = name;
+        this.manufactor = manufactor;
+        this.price = price;
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getArticleId() {
