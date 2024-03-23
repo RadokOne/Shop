@@ -1,4 +1,4 @@
-package com.example.shop.component.wrapper;
+package com.example.shop.component.wrapper.article;
 
 public enum BookCategoryWrapper {
 	CRIME,

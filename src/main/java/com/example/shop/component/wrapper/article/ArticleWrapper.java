@@ -1,4 +1,4 @@
-package com.example.shop.component.wrapper;
+package com.example.shop.component.wrapper.article;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

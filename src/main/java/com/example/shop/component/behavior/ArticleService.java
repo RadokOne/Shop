@@ -1,21 +1,19 @@
 package com.example.shop.component.behavior;
 
-import com.example.shop.component.wrapper.ArticleWrapper;
+import com.example.shop.component.wrapper.article.ArticleWrapper;
+import com.example.shop.component.wrapper.customer.CartWrapper;
+import com.example.shop.component.wrapper.customer.CustomerWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ShopService {
-
+public class ArticleService {
 
     @Autowired
     private ArticleClient articleClient;
+
 
     public void createArticle(ArticleWrapper article) {
         articleClient.createArticle(article);

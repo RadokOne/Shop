@@ -1,22 +1,19 @@
 package com.example.shop.component;
 
-import com.example.shop.component.behavior.ShopService;
-import com.example.shop.component.wrapper.ArticleWrapper;
-import com.example.shop.connectors.ArticleConnector;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.shop.component.behavior.ArticleService;
+import com.example.shop.component.wrapper.article.ArticleWrapper;
 
 import java.util.List;
 
 
 public class Shop {
-	private ShopService shopService;
+	private ArticleService shopService;
 	private List<Integer> customerId;
 
 
 	public Shop() {
 		//customers = new HashMap<Integer, Customer>();
-		shopService = new ShopService();
+		shopService = new ArticleService();
 
 	}
 

@@ -1,6 +1,6 @@
 package com.example.shop.connectors;
 
-import com.example.shop.component.wrapper.ArticleWrapper;
+import com.example.shop.component.wrapper.article.ArticleWrapper;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
