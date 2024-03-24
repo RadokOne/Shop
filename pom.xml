@@ -37,6 +37,17 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-activemq</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>javax.jms-api</artifactId>
+			<version>2.0.1</version> <!-- oder eine andere Version, die Sie benötigen -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
@@ -57,6 +68,7 @@
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
+
 	</dependencyManagement>
 
 	<build>
