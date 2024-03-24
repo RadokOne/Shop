@@ -30,7 +30,6 @@ public class CustomerServiceTest {
         cart = new CartWrapper(customer);
         cart.addCartItem(articleId);
         customer.setCart(cart);
-
     }
 
     @Order(1)

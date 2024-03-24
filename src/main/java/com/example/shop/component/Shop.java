@@ -1,84 +1,112 @@
 package com.example.shop.component;
 
+
 import com.example.shop.component.behavior.ArticleService;
+import com.example.shop.component.behavior.CustomerService;
+import com.example.shop.component.behavior.OrderMessageSender;
 import com.example.shop.component.wrapper.article.ArticleWrapper;
+import com.example.shop.component.wrapper.customer.CartItemWrapper;
+import com.example.shop.component.wrapper.customer.CartWrapper;
+import com.example.shop.component.wrapper.customer.CustomerWrapper;
+import com.example.shop.component.wrapper.order.OrderPositionWrapper;
+import com.example.shop.component.wrapper.order.OrderWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
-
+@Service
 public class Shop {
-	private ArticleService shopService;
-	private List<Integer> customerId;
 
+	private ArticleService articleService;
+	private CustomerService customerService;
 
-	public Shop() {
-		//customers = new HashMap<Integer, Customer>();
-		shopService = new ArticleService();
+	private OrderMessageSender orderMessageSender;
 
+	@Autowired
+	public Shop(ArticleService articleService, CustomerService customerService, OrderMessageSender orderMessageSender) {
+		this. articleService = articleService;
+		this.customerService = customerService;
+		this.orderMessageSender = orderMessageSender;
 	}
 
-//	public Integer createCustomerWithCart() {
-//		Cart cart = new Cart();
-//
-//		Customer customer = new Customer(cart);
-//
-//		customers.put(customer.getCustomerId(), customer);
-//
-//		return customer.getCustomerId();
-//	}
+	public Integer createCustomerWithCart(String name, String address) {
+		CustomerWrapper customer = new CustomerWrapper(name, address);
+		CartWrapper cart = new CartWrapper(customer);
+		customer.setCart(cart);
+
+		CustomerWrapper databaseCustomer = customerService.createCustomerWithCard(customer);
+		customer.setCustomerId(databaseCustomer.getCustomerId());
+
+		return customer.getCustomerId();
+	}
+
+	public void createArticle(ArticleWrapper article){
+		articleService.createArticle(article);
+	}
 
 	public ArticleWrapper getArticle(int articleId) {
-		// Delegation
-		return shopService.getArticle(articleId);
+		return articleService.getArticle(articleId);
+	}
+
+	public void addArticleToCart(Integer customerId, Integer articleId) {
+		ArticleWrapper foundArticle = getArticle(articleId);
+		System.out.println("+++++++++++");
+		System.out.println(foundArticle.getArticleId());
+		System.out.println("+++++++++++");
+		customerService.addArticleToCart(customerId, String.valueOf(foundArticle.getArticleId()));
+	}
+
+	public void decrementArticleQuantityInCart(Integer customerId, Integer articleId) {
+		customerService.decrementArticleQuantityInCart(customerId, articleId);
+	}
+
+	public void removeArticleFromCart(Integer customerId, int articleId) {
+		customerService.removeArticleFromCart(customerId, articleId);
 	}
 
 
+	public OrderWrapper checkOutCart(int customerId) throws JsonProcessingException {
 
-//	public void removeArticleFromCart(Integer customerId, int articleId) {
-//		// Delegation
-//		Cart cart = customers.get(customerId).getCart();
-//
-//		cart.deleteCartItem(articleId);
-//	}
+		CartWrapper cart = customerService.getCart(customerId);
 
-//	public void addArticleToCart(Integer customerId, Integer articleId) {
-//		Article foundArticle = getArticle(articleId);
-//
-//		Cart cart = customers.get(customerId).getCart();
-//
-//		cart.addCartItem(foundArticle);
-//	}
+		List<OrderPositionWrapper> orderPositionList = new ArrayList<>();
 
-//	public void decrementArticleQuantityInCart(Integer customerId,
-//			Integer articleId) {
-//		Cart cart = customers.get(customerId).getCart();
-//
-//		cart.decrementArticleQuantity(articleId);
-//	}
+		int i = 1;
+		for (CartItemWrapper cartItem : cart.getCartItems()){
+			float articlePrice = articleService.getArticle(cartItem.getArticleId()).getPrice();
 
-//	public Order checkOutCart(int customerId) {
-//
-//		Customer customer = customers.get(customerId);
-//		Cart cart = customer.getCart();
-//
-//		Order order = new Order(1);
-//
-//		int i = 1;
-//
-//		for (CartItem cartItem : cart.getCartItems()) {
-//			OrderPosition orderPosition = new OrderPosition(i++);
-//			orderPosition.setArticle(cartItem.getArticle());
-//			orderPosition.setArticleQuantity(cartItem.getQuantity());
-//			order.addOrderPosition(orderPosition);
-//		}
-//
-//		customer.addOrder(order);
-//
-//		return order;
-//	}
+			OrderPositionWrapper orderPosition = new OrderPositionWrapper(
+					String.valueOf(i),
+					cartItem.getArticleId(),
+					articlePrice,
+					cartItem.getQuantity()
+			);
+			i++;
+			orderPositionList.add(orderPosition);
+		}
 
-//	public Cart getCartForCustomer(Integer customerId) {
-//		return customers.get(customerId).getCart();
-//	}
+		OrderWrapper order = new OrderWrapper(String.valueOf(System.currentTimeMillis()), customerId, orderPositionList);
+
+		orderMessageSender.addOrder(order);
+
+		return order;
+	}
+
+	public CartWrapper getCartForCustomer(Integer customerId) {
+		return customerService.getCart(customerId);
+	}
+
+	public void deleteCustomer(int customerId){
+		customerService.deleteCustomer(customerId);
+	}
+	public void deleteArticle(int articleId){
+		articleService.deleteArticle(articleId);
+	}
+
+	public void deleteOrder(OrderWrapper orderWrapper) throws JsonProcessingException {
+		orderMessageSender.deleteOrder(orderWrapper);
+	}
 
 }
